@@ -1,0 +1,55 @@
+#!/bin/bash
+
+
+# @Author: Saksham Trivedi 
+# @aka - SK -
+# @Email: trivedisaksham@gmail.com
+
+# Run this script with sudo previleges
+
+
+# This script is intended for personal use for fedora workstaion for quick setup
+
+
+echo '\n\n *********************************** Installing Packages *********************************** \n\n'
+
+sudo dnf update -y && sudo dnf -y install gnome-console @development-tools git wget curl ruby ruby-devel zsh util-linux-user redhat-rpm-config gcc gcc-c++ make fontawesome-fonts powerline vim-powerline tmux-powerline powerline-fonts kernel-* gcc glibc-headers make libaio openssl
+
+echo '\n\n Installing Requisites \n\n'
+
+git clone --depth=1 https://github.com/ryanoasis/nerd-fonts ~/.nerd-fonts && sudo ~/.nerd-fonts 
+sudo gem install colorls
+sudo gem update colorls
+sudo grubby --set-default-index=2
+sudo grubby --default-profile
+git clone https://github.com/SK-here/BASH ~/WorkBench/BASH
+cat ~/WorkBench/BASH/customAlias > ~/.bashrc 
+sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+sudo dnf install 'dnf-command(config-manager)'
+sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
+
+
+echo '\n\n *********************************** Installing VS Code and GitHub CLI *********************************** \n\n'
+
+sudo dnf install -y code gh
+
+echo '\n\n *********************************** Git and GitHub Config *********************************** \n\n'
+
+git config --global user.name "SK"
+git config --global user.email "trivedisaksham@gmail.com"
+git config --global core.editor code
+
+
+# Disble Unnecessary repo
+sudo dnf update -y --disablerepo=copr:copr.fedorainfracloud.org:phracek:PyCharm 
+
+# GitHub Cli Login
+git auth login
+
+
+# Uncomment Below 2 Lines for wroking with BASH repo
+# cd ~/WoekBench/BASH && git remote add origin git@github.com:SK-here/BASH.git
+# gh auth setup-git && cd ~
+
+# Applying User Config
+source ~/.bashrc
