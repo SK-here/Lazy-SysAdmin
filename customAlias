@@ -1,7 +1,7 @@
 
 
 # Custom user alias
-alias ram='sudo ~/WorkBench/BASH/clear_buffer.sh'
+alias ram='sudo ~/WorkBench/BASH/clear_buffer'
 alias mv='mv -v'
 alias cp='cp -v'
 alias rm='rm -rvfi'
