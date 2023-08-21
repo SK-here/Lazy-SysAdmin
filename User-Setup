@@ -15,6 +15,8 @@ echo '\n\n *********************************** Installing Packages *************
 
 sudo dnf update -y && sudo dnf -y install gnome-console @development-tools git wget curl ruby ruby-devel zsh util-linux-user redhat-rpm-config gcc gcc-c++ make fontawesome-fonts powerline vim-powerline tmux-powerline powerline-fonts kernel-* gcc glibc-headers make libaio openssl
 
+sudo dnf install -y *ntfs*
+
 echo '\n\n Installing Requisites \n\n'
 
 git clone --depth=1 https://github.com/ryanoasis/nerd-fonts ~/.nerd-fonts && sudo ~/.nerd-fonts 
