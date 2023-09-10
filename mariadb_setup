@@ -1,0 +1,11 @@
+#!/bin/bash
+
+dnf install -y mariadb mariadb-server
+grep mysql /etc/group
+mysql_install_db --user=mysql
+systemctl start mariadb
+systemctl enable mariadb
+systemctl enable --now mariadb
+mysqladmin -u root password 'root' && mysqladmin -u root -h $(hostname) password 'root'
+mysqladmin -u root password 'root' && sudo mysqladmin -u root -h $(hostname) password 'root'
+mysql_secure_installation
