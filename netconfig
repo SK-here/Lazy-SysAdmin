@@ -1,0 +1,78 @@
+#!/bin/bash
+
+echo "Press 1: Connection Modify"
+echo "Press 2: New Connection"
+read connection
+
+if [ "$connection" -eq 1 ]; then
+    echo "Available Network Profiles:"
+    profiles=$(nmcli connection show | awk '{print $1}')
+
+    # Initialize a counter
+    count=1
+
+    # Loop through the profiles and print them with serial numbers
+    for profile in $profiles; do
+        echo "$count. $profile"
+        ((count++))
+    done
+
+    read -p "Enter Connection Name to Modify: " con_name
+    read -p "Enter IP Address with mask: " ip
+    read -p "Enter Gateway: " gateway
+    read -p "Enter DNS Server: " dns
+    read -p "Enter domain (name.example.com): " domain
+
+    # Available Interfaces
+    echo "Available network interfaces:"
+    interfaces=$(ip -o link show | awk -F': ' '{print $2}')
+    num=1
+    for iface in $interfaces; do
+        echo "$num: $iface"
+        num=$((num + 1))
+    done
+    read -p "Select Interface: " if_name
+
+    echo "Select interface type:"
+    echo "1: ethernet"
+    echo "2: 802-11-wireless"
+    read con_type
+
+    echo "Network Config will be Applied in 10 Sec."
+    echo "Press Ctrl+C to Abort"
+    sleep 10
+    nmcli con modify "$con_name" ipv4.addresses "$ip" gw4 "$gateway" ipv4.dns "$dns" type "$con_type" ifname "$if_name" ipv4.method manual
+    nmcli con show "$con_name"
+
+elif [ "$connection" -eq 2 ]; then
+    read -p "Enter Connection Name: " con_name
+    read -p "Enter IP Address with mask: " ip
+    read -p "Enter Gateway: " gateway
+    read -p "Enter DNS Server: " dns
+    read -p "Enter domain (name.example.com): " domain
+
+    # Available Interfaces
+    echo "Available network interfaces:"
+    interfaces=$(ip -o link show | awk -F': ' '{print $2}')
+    num=1
+    for iface in $interfaces; do
+        echo "$num: $iface"
+        num=$((num + 1))
+    done
+    read -p "Select Interface: " if_name
+
+    echo "Select interface type:"
+    echo "1: ethernet"
+    echo "2: 802-11-wireless"
+    read con_type
+
+    echo "Network Config will be Applied in 10 Sec."
+    echo "Press Ctrl+C to Abort"
+    sleep 10
+    nmcli con add con-name "$con_name" type "$con_type" ifname "$if_name" ipv4.method manual ipv4.addresses "$ip" gw4 "$gateway" ipv4.dns "$dns" ipv4.dns-search "$domain"
+    nmcli con show "$con_name"
+
+else
+    echo "OUT OF BOUND OPTION!!!"
+fi
+
