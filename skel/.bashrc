@@ -26,12 +26,12 @@ unset rc
 
 
 # History Settings
-export HISTCONTROL=ignoredups
+export HISTCONTROL=erasedups:ignoreboth
 shopt -s histappend
 
 # Ignore bunch of commands listed inside a file
 
-ignore_hist="$HOME/.bash_commands"
+ignore_hist="$HOME/.bash_ignore"
 
 if [ -f "$ignore_hist" ]; then
 
@@ -43,13 +43,12 @@ if [ -f "$ignore_hist" ]; then
 fi
 
 ############################################# Custom User Alias ###############################################
-alias ram='sudo ~/WorkBench/Lazy-SysAdmin/clear_buffer'
+alias ram='sudo ~/bin/clear_buffer'
 alias mv='mv -v'
-alias cp='cp -v'
+alias cp='cp -vr'
 alias cls='clear'
 alias sus='systemctl suspend'
 alias vi='vim'
 alias ip='ip -c'
-alias ll='ls -afl --color=auto'
-alias clr='cat /dev/null > ~/.bash_history'
+alias ll='ls -lhtr --color=auto'
 alias fw='firewall-cmd'
