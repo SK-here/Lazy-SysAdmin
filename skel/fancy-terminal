@@ -178,7 +178,28 @@ bash_prompt() {
  # CONFIGURATION                                                          ##
  # I use them for different hosts.                                        ##
  ###########################################################################
+
+######################## DEFAULT CONFIGURATION (RED-WHITE Theme) ##############################
+
+	# Host
+	FONT_COLOR_1=$RED; BACKGROUND_1=$WHITE; TEXTEFFECT_1=$BOLD
 	
+	# USER
+	FONT_COLOR_2=$WHITE; BACKGROUND_2=$D_GRAY; TEXTEFFECT_2=$BOLD
+
+	# Prompt
+	FONT_COLOR_3=$GRAY; BACKGROUND_3=$WHITE; TEXTEFFECT_3=$BOLD
+
+	# ROOT User
+	if [ "$USER" = root ]; then
+		FONT_COLOR_1=$WHITE; BACKGROUND_1=$RED; TEXTEFFECT_1=$BOLD
+		FONT_COLOR_3=$RED; BACKGROUND_3=$WHITE; TEXTEFFECT_2=$BOLD
+	fi
+	
+	# Terminal Text	
+	PROMT_FORMAT=$ORANGE_BOLD
+
+###################### Configuration Based on hostname #################################
 	## CONFIGURATION: SERVER - A
 	if [ "$(hostname -s)" = servera ]; then
 
@@ -261,28 +282,6 @@ bash_prompt() {
 		if [ "$USER" = root ]; then
 			FONT_COLOR_1=$WHITE; BACKGROUND_1=$RED; TEXTEFFECT_1=$BOLD
 			FONT_COLOR_3=$WHITE; BACKGROUND_3=$YELLOW; TEXTEFFECT_3=$BOLD
-		fi
-		
-		# Terminal Text	
-		PROMT_FORMAT=$ORANGE_BOLD
-	fi
-
-	## CONFIGURATION: Workstation
-	if [ "$(hostname -s)" = lab ]; then
-
-		# Host
-		FONT_COLOR_1=$RED; BACKGROUND_1=$WHITE; TEXTEFFECT_1=$BOLD
-		
-		# USER
-		FONT_COLOR_2=$WHITE; BACKGROUND_2=$D_GRAY; TEXTEFFECT_2=$BOLD
-
-		# Prompt
-		FONT_COLOR_3=$GRAY; BACKGROUND_3=$WHITE; TEXTEFFECT_3=$BOLD
-
-		# ROOT User
-		if [ "$USER" = root ]; then
-			FONT_COLOR_1=$WHITE; BACKGROUND_1=$RED; TEXTEFFECT_1=$BOLD
-			FONT_COLOR_3=$RED; BACKGROUND_3=$WHITE; TEXTEFFECT_2=$BOLD
 		fi
 		
 		# Terminal Text	
@@ -439,12 +438,12 @@ unset rc
 
 
 # History Settings
-export HISTCONTROL=ignoredups
+export HISTCONTROL=erasedups:ignoreboth
 shopt -s histappend
 
 # Ignore bunch of commands listed inside a file
 
-ignore_hist="$HOME/.bash_commands"
+ignore_hist="$HOME/.bash_ignore"
 
 if [ -f "$ignore_hist" ]; then
 
@@ -456,18 +455,12 @@ if [ -f "$ignore_hist" ]; then
 fi
 
 ############################################# Custom User Alias ###############################################
-alias ram='sudo ~/WorkBench/Lazy-SysAdmin/clear_buffer'
+alias ram='sudo ~/bin/clear_buffer'
 alias mv='mv -v'
-alias cp='cp -v'
+alias cp='cp -rv'
 alias cls='clear'
-alias sleep='systemctl suspend'
+alias sus='systemctl suspend'
 alias vi='vim'
-alias ip='ip -c'
-alias ll='ls -afl --color=auto'
-alias clr='cat /dev/null > ~/.bash_history'
+alias ip='ip --color'
+alias ll='ls -lhtRa --color=auto'
 alias fw='firewall-cmd'
-alias check='ping -c4 google.com && ping -c4 lab.example.com'
-alias servera='ssh root@servera'
-alias serverb='ssh root@serverb'
-alias serverc='ssh root@serverc'
-alias serverd='ssh root@serverd'
