@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo "stopping machine..."
+vboxmanage controlvm $@ poweroff
+echo "VM stopped Successfully."
+echo ""

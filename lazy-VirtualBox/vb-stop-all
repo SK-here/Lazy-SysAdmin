@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# List of VM names (Modify the names as per requisite)
+vm_names=("node1" "node2" "node3" "node4" "node5")
+
+# Save state and power off each virtual machine
+for vm_name in "${vm_names[@]}"; do
+    # Save the state of the VM
+    echo "Saving state and powering off" 
+    VBoxManage controlvm "$vm_name" savestate
+    echo "State saved successfully and Powered Off"
+    echo ""
+    # Add a delay between saving state for each VM (adjust as needed)
+    sleep 3
+done
+
+echo "Virtual machines stopped with saved state successfully."
+

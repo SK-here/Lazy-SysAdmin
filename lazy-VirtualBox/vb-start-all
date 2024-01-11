@@ -1,0 +1,32 @@
+# @auhtor: Saksham Trivedi
+# @alias: - SK -
+# @Description: This script is use to start multiple virtual machines installed on VirtualBox all at once
+# 		just modify the name of a machines you want to start and the type to define how you want
+# 		to start
+#
+# 		Available Types (--type) Default: headless
+# 		headless : headless mode (no console/window will be shown).
+# 		separate : A console will be shown but also provides flexibility to close the window and run in the background as headless.
+# 		gui: A window is opened but vm goes down once the window exits ( Does not provides flexibility to run in a headless mode).
+#
+
+#!/bin/bash
+
+# List of VM names
+vm_names=("node1" "node2" "node3" "node4" "node5")
+
+mode=headless
+
+# Start each virtual machine
+for vm_name in "${vm_names[@]}"; do
+    # Start the VM
+    echo "starting machine..."
+    VBoxManage startvm "$vm_name" --type=$mode
+    echo "VM started Successfully."
+    echo ""
+    # Add a delay between starting each VM (adjust as needed)
+    sleep 5
+done
+
+echo "All Virtual machines started successfully."
+

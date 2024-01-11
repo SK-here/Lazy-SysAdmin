@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Save state and power off each virtual machine
+    echo "Saving state and powering off" 
+    VBoxManage controlvm $@  savestate
+    echo "State saved successfully and Powered Off"
+    echo ""

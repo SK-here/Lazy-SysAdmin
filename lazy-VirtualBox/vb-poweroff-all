@@ -1,0 +1,25 @@
+# @auhtor: Saksham Trivedi
+# @alias: - SK -
+# @Description: This script is use to poweroff multiple virtual machines installed on VirtualBox all at once
+# 		just modify the name of a machines you want to start and the type to define how you want
+# 		to start
+#
+
+#!/bin/bash
+
+# List of VM names
+vm_names=("node1" "node2" "node3" "node4" "node5")
+
+# Power off each virtual machine
+for vm_name in "${vm_names[@]}"; do
+    # Power off the VM
+    echo "Powering Off VM..."
+    VBoxManage controlvm "$vm_name" poweroff
+    echo "VM Powered Off Successfully."
+    echo ""
+    # Add a delay between powering off each VM (adjust as needed)
+    sleep 5
+done
+
+echo "Virtual machines powered off successfully."
+
