@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+sudo dnf install -y ansible-core
+ansible-galaxy collection install community.general 
+ansible-galaxy collection install ansible.posix
+ansible-playbook ~/workbench/Lazy-SysAdmin/System-Setup/setup-playbook.yml

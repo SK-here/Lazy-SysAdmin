@@ -1,0 +1,92 @@
+---
+
+- name: Lazy System Setup
+
+  hosts: localhost
+
+  become: true
+
+  tasks:
+
+    - name: Include variables from vars/pkgs.yml
+      ansible.builtin.include_vars: vars/pkgs.yml
+
+    - name: Create a httpd server to host Apache Web Server
+      ansible.builtin.package:
+        name: httpd
+        state: present
+      notify: Start Apache
+
+    - name: Configure VS Code repository using dnf
+      ansible.builtin.yum_repository:
+        name: vscode
+        description: Visual Studio Code
+        baseurl: https://packages.microsoft.com/yumrepos/vscode
+        gpgcheck: true
+        gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+
+    - name: Configure the GitHub CLI repository using dnf
+      ansible.builtin.yum_repository:
+        name: gh-cli
+        description: GitHub CLI
+        baseurl: https://cli.github.com/packages/rpm/gh-cli.repo
+        state: present
+
+    - name: Disable the copr:copr.fedorainfracloud.org:phracek:PyCharm repository
+      ansible.builtin.yum_repository:
+        name: copr:copr.fedorainfracloud.org:phracek:PyCharm
+        state: absent
+
+    - name: Install the required packages listed in the vars/pkgs.yml file using dnf
+      ansible.builtin.dnf:
+        name: "{{ pkgs }}"
+        state: present
+        update_cache: true
+
+    - name: Install Python packages from requirements file located at vars/requirements.txt using pip
+      ansible.builtin.pip:
+        requirements: "{{ requirements_file }}"
+
+    - name: Configure Git for 'SK' 'trivedisaksham@gmail.com' and 'code' as the default editor
+      community.general.git_config:
+        name: "{{ item.name }}"
+        value: "{{ item.value }}"
+        scope: global
+      with_items:
+        - { name: 'user.name', value: 'SK' }
+        - { name: 'user.email', value: 'trivedisaksham@gmail.com' }
+        - { name: 'core.editor', value: 'code' }
+
+    - name: Install and Setup MariaDB Server and set the mariadb root password to 'root'
+      ansible.builtin.package:
+        name: mariadb-server
+        state: present
+      notify: Start MariaDB Service
+
+    - name: Install Apache-Spark and configure the home directory as /opt/spark
+      ansible.builtin.get_url:
+        url: https://downloads.apache.org/spark/spark-3.1.2/spark-3.1.2-bin-hadoop3.2.tgz
+        dest: /tmp/spark-3.1.2-bin-hadoop3.2.tgz
+        mode: '0755'
+      notify: Extract Apache Spark
+
+  handlers:
+    - name: Start MariaDB Service
+      ansible.builtin.service:
+        name: mariadb
+        state: started
+        enabled: true
+
+    - name: Extract Apache Spark
+      ansible.builtin.unarchive:
+        src: /tmp/spark-3.1.2-bin-hadoop3.2.tgz
+        dest: /opt
+        remote_src: true
+        creates: /opt/spark-3.1.2-bin-hadoop3.2
+
+    - name: Start Apache
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true
