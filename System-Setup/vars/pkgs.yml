@@ -23,9 +23,28 @@ pkgs:
   - python3-notebook
   - python3-pip
   - "*ntfs*"
-  - mysql-connector-python3
   - code
   - gh
   - scala
+  - java-11-openjdk-headless
 #  - gnome-tweaks
 #  - gnome-extensions-app
+
+pip_requirements:
+  - notebook
+  - numpy
+  - pandas
+  - matplotlib
+  - scikit-learn
+  - seaborn
+  - django
+  - ansible-lint
+  - py4j
+  - paramiko
+  - mysql-connector-python3
+# - pyspark
+
+spark_url: 'https://dlcdn.apache.org/spark/spark-3.5.4/spark-3.5.4-bin-hadoop3-scala2.13.tgz'
+SPARK_home_dir: '/home/sk/workbench/'
+SPARK_HOME: '/home/sk/.local/spark-3.5.4'
+spark_archive: '/home/sk/workbench/spark-3.5.4-bin-hadoop3-scala2.13.tgz'

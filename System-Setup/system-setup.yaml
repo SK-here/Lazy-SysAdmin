@@ -46,7 +46,7 @@
 
     - name: Install Python packages from requirements file located at vars/requirements.txt using pip
       ansible.builtin.pip:
-        requirements: "{{ requirements_file }}"
+        requirements: "{{ pip_requirements }}"
 
     - name: Configure Git for 'SK' 'trivedisaksham@gmail.com' and 'code' as the default editor
       community.general.git_config:
@@ -66,8 +66,8 @@
 
     - name: Install Apache-Spark and configure the home directory as /opt/spark
       ansible.builtin.get_url:
-        url: https://downloads.apache.org/spark/spark-3.1.2/spark-3.1.2-bin-hadoop3.2.tgz
-        dest: /tmp/spark-3.1.2-bin-hadoop3.2.tgz
+        url: "{{ spark_url }}"
+        dest: "{{ SPARK_Archive }}"
         mode: '0755'
       notify: Extract Apache Spark
 
@@ -80,13 +80,30 @@
 
     - name: Extract Apache Spark
       ansible.builtin.unarchive:
-        src: /tmp/spark-3.1.2-bin-hadoop3.2.tgz
-        dest: /opt
+        src: "{{ spark_archive }}"
+        dest: "{{ SPARK_home_dir }}"
         remote_src: true
-        creates: /opt/spark-3.1.2-bin-hadoop3.2
+        creates: "{{ SPARK_HOME }}"
+      notify: Set Spark Environment Variables
 
     - name: Start Apache
       ansible.builtin.service:
         name: httpd
         state: started
         enabled: true
+
+    - name: Set Spark Environment Variables
+      ansible.builtin.lineinfile:
+        path: '~/.bashrc'
+        line: "{{ item.SPARK_HOME }}"
+        create: true
+        mode: '0644'
+      with_items:
+        - { SPARK_HOME: 'export SPARK_HOME={{ SPARK_HOME }}' }
+        - { PATH: 'export PATH=$PATH:$SPARK_HOME/bin' }
+        - { PYSPARK_PYTHON: 'export PYSPARK_PYTHON=python3' }
+        - { PYSPARK_DRIVER_PYTHON: 'export PYSPARK_DRIVER_PYTHON=python3' }
+        - { PYTHONPATH: 'export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH' }
+        - { PYSPARK_DRIVER_PYTHON: 'export PYSPARK_DRIVER_PYTHON=jupyter' }
+        - { PYSPARK_PYTHON_DRIVER_OPTS: 'export PYSPARK_PYTHON_DRIVER_OPTS="notebook"' }
+        - { jn: 'alias jn="jupyter notebook --ip=0.0.0.0 --no-browser"' }

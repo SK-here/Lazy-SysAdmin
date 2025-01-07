@@ -1,7 +1,12 @@
-jupyterlab
+notebook
 numpy
 pandas
 matplotlib
 scikit-learn
 seaborn
 django
+ansible-lint
+pyspark
+py4j
+paramiko
+mysql-connector-python3
