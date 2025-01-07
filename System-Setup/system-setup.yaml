@@ -102,7 +102,6 @@
         - { SPARK_HOME: 'export SPARK_HOME={{ SPARK_HOME }}' }
         - { PATH: 'export PATH=$PATH:$SPARK_HOME/bin' }
         - { PYSPARK_PYTHON: 'export PYSPARK_PYTHON=python3' }
-        - { PYSPARK_DRIVER_PYTHON: 'export PYSPARK_DRIVER_PYTHON=python3' }
         - { PYTHONPATH: 'export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH' }
         - { PYSPARK_DRIVER_PYTHON: 'export PYSPARK_DRIVER_PYTHON=jupyter' }
         - { PYSPARK_PYTHON_DRIVER_OPTS: 'export PYSPARK_PYTHON_DRIVER_OPTS="notebook"' }
