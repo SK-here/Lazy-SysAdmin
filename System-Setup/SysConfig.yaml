@@ -26,11 +26,13 @@
         gpgkey: https://packages.microsoft.com/keys/microsoft.asc
         state: present
 
-    - name: Configure the GitHub CLI repository using dnf
+    - name: Configure the GitHub CLI repository
       ansible.builtin.yum_repository:
-        name: gh-cli
+        name: gh
         description: GitHub CLI
-        baseurl: https://cli.github.com/packages/rpm/gh-cli.repo
+        baseurl: "{{ GitHub_CLI_baseurl }}"
+        gpgcheck: true
+        gpgkey: "{{ GitHub_CLI_keyring }}"
         state: present
 
     - name: Disable the copr:copr.fedorainfracloud.org:phracek:PyCharm repository
@@ -48,6 +50,21 @@
       ansible.builtin.pip:
         requirements: "{{ pip_requirements }}"
 
+    - name: Setup group 'SK'
+      ansible.builtin.group:
+        name: 'sk'
+        state: present
+
+    - name: Setup User 'SK' with 'bash' as the default shell
+      ansible.builtin.user:
+        name: 'sk'
+        group: 'sk'
+        groups: 'wheel'
+        password: "{{ '1' | password_hash('sha512') }}"
+        shell: '/bin/bash'
+        createhome: true
+        skeleton: '/etc/skel'
+
     - name: Configure Git for 'SK' 'trivedisaksham@gmail.com' and 'code' as the default editor
       community.general.git_config:
         name: "{{ item.name }}"
@@ -64,10 +81,10 @@
         state: present
       notify: Start MariaDB Service
 
-    - name: Install Apache-Spark and configure the home directory as /opt/spark
+    - name: Install Apache-Spark and configure the home directory
       ansible.builtin.get_url:
         url: "{{ spark_url }}"
-        dest: "{{ SPARK_Archive }}"
+        dest: "{{ spark_archive }}"
         mode: '0755'
       notify: Extract Apache Spark
 
@@ -81,28 +98,16 @@
     - name: Extract Apache Spark
       ansible.builtin.unarchive:
         src: "{{ spark_archive }}"
-        dest: "{{ SPARK_home_dir }}"
-        remote_src: true
+        dest: "{{ spark_home_dir }}"
+        # remote_src: true
         creates: "{{ SPARK_HOME }}"
       notify: Set Spark Environment Variables
-
-    - name: Start Apache
-      ansible.builtin.service:
-        name: httpd
-        state: started
-        enabled: true
 
     - name: Set Spark Environment Variables
       ansible.builtin.lineinfile:
         path: '~/.bashrc'
-        line: "{{ item.SPARK_HOME }}"
+        line: "{{ item }}"
         create: true
         mode: '0644'
       with_items:
-        - { SPARK_HOME: 'export SPARK_HOME={{ SPARK_HOME }}' }
-        - { PATH: 'export PATH=$PATH:$SPARK_HOME/bin' }
-        - { PYSPARK_PYTHON: 'export PYSPARK_PYTHON=python3' }
-        - { PYTHONPATH: 'export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH' }
-        - { PYSPARK_DRIVER_PYTHON: 'export PYSPARK_DRIVER_PYTHON=jupyter' }
-        - { PYSPARK_PYTHON_DRIVER_OPTS: 'export PYSPARK_PYTHON_DRIVER_OPTS="notebook"' }
-        - { jn: 'alias jn="jupyter notebook --ip=0.0.0.0 --no-browser"' }
+        - "{{ aliases }}"

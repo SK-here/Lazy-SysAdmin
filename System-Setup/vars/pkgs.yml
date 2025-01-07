@@ -27,24 +27,22 @@ pkgs:
   - gh
   - scala
   - java-11-openjdk-headless
-#  - gnome-tweaks
-#  - gnome-extensions-app
-
-pip_requirements:
-  - notebook
-  - numpy
-  - pandas
-  - matplotlib
-  - scikit-learn
-  - seaborn
-  - django
-  - ansible-lint
-  - py4j
-  - paramiko
   - mysql-connector-python3
-# - pyspark
+  - python3-devel
 
+aliases:
+  - SPARK_HOME: 'export SPARK_HOME={{ SPARK_HOME }}'
+  - PATH: 'export PATH=$PATH:$SPARK_HOME/bin'
+  - PYSPARK_PYTHON: 'export PYSPARK_PYTHON=python3'
+  - PYTHONPATH: 'export PYTHONPATH=$SPARK_HOME/python:$PYTHONPATH'
+  - PYSPARK_DRIVER_PYTHON: 'export PYSPARK_DRIVER_PYTHON="jupyter"'
+  - PYSPARK_PYTHON_DRIVER_OPTS: 'export PYSPARK_PYTHON_DRIVER_OPTS="notebook"'
+  - jn: 'alias jn="jupyter notebook --ip=0.0.0.0 --no-browser"'
+
+pip_requirements: '/home/sk/workbench/Lazy-SysAdmin/System-Setup/vars/requirements.txt'
+GitHub_CLI_baseurl: https://cli.github.com/packages/rpm
+GitHub_CLI_keyring: https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x23F3D4EA75716059
 spark_url: 'https://dlcdn.apache.org/spark/spark-3.5.4/spark-3.5.4-bin-hadoop3-scala2.13.tgz'
-SPARK_home_dir: '/home/sk/workbench/'
+spark_home_dir: '/home/sk/.local/'
 SPARK_HOME: '/home/sk/.local/spark-3.5.4'
 spark_archive: '/home/sk/workbench/spark-3.5.4-bin-hadoop3-scala2.13.tgz'
